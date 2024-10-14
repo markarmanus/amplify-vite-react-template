@@ -1,3 +1,6 @@
+// Disabling Entire File TS check until migration from JS is done.
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import Helper from "./Helper";
 import TMDBApi from "./TMDBApi";
 import { V6Client } from "@aws-amplify/api-graphql";

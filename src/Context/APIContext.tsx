@@ -1,7 +1,4 @@
 import React, { ReactNode, createContext } from "react";
-import type { Schema } from "../../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
-import { V6Client } from "@aws-amplify/api-graphql";
 import API from "../API/API";
 
 const ApiContext = createContext<{

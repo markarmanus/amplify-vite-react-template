@@ -46,7 +46,7 @@ class Home extends React.Component {
     }
   };
   componentDidMount() {
-    document.getElementById("mainContainer").addEventListener("scroll", (e) => {
+    document.getElementById("mainContainer").addEventListener("scroll", () => {
       if (this.lastMovie?.current) {
         let boundingRect = this.lastMovie.current.getBoundingClientRect();
         if (
@@ -124,7 +124,7 @@ class Home extends React.Component {
       }
     }
   }
-  async loadNextPage(page) {
+  async loadNextPage() {
     if (!this.state.loading) {
       this.setState(
         {
