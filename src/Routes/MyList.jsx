@@ -6,9 +6,8 @@ import BlurDiv from "../UI/BlurDiv";
 import MovieModal from "../UI/MovieModal";
 import NavBar from "../UI/NavBar";
 import ExpandingDivider from "../UI/ExpandingDivider";
-import LoadingSpinner from "../UI/LoadingSpinner";
 import MovieFilters from "../UI/Fliters/MovieFliters";
-import API from "../API/API";
+import API from "../APIs/API";
 
 class MyList extends Component {
   state = {
@@ -35,15 +34,11 @@ class MyList extends Component {
   }
 
   updateGenreFilters = (newFilters) => {
-    this.setState({ activeGenreFilters: newFilters }, () => {
-      console.log(this.state.activeGenreFilters);
-    });
+    this.setState({ activeGenreFilters: newFilters });
   };
 
   updateWatchedFilters = (newFilters) => {
-    this.setState({ activeWatchedFilter: newFilters }, () => {
-      console.log(this.state.activeWatchedFilter);
-    });
+    this.setState({ activeWatchedFilter: newFilters });
   };
 
   closeModal = () => {

@@ -8,16 +8,13 @@ import { Amplify } from "aws-amplify";
 import outputs from "../amplify_outputs.json";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
-import { ApiContextProvider } from "./Context/APIContext.js";
 
 Amplify.configure(outputs);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ApiContextProvider>
-        <App />
-      </ApiContextProvider>
+      <App />
     </BrowserRouter>
   </React.StrictMode>
 );
