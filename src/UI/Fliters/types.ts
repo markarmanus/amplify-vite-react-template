@@ -1,0 +1,20 @@
+export type GenreFilter = {
+  Action?: boolean;
+  Adventure?: boolean;
+  Animation?: boolean;
+  Comedy?: boolean;
+  Crime?: boolean;
+  Documentary?: boolean;
+  Drama?: boolean;
+  Family?: boolean;
+  Fantasy?: boolean;
+  History?: boolean;
+  Horror?: boolean;
+  Music?: boolean;
+  Mystery?: boolean;
+  Romance?: boolean;
+  "Science Fiction"?: boolean;
+  Thriller?: boolean;
+  War?: boolean;
+  Western?: boolean;
+};

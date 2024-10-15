@@ -8,9 +8,7 @@ const schema = a.schema({
       overview: a.string().required(),
       poster_path: a.string(),
       vote_average: a.string(),
-      genres: a.json(),
-      runtime: a.integer(),
-      release_date: a.string(),
+      genre_ids: a.string().array(),
     })
     .authorization((allow) => [allow.publicApiKey()]),
   User: a

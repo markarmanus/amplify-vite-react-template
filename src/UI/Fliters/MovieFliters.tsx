@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import FiltersGroup from "./FiltersGroup";
 import RadioFilters from "./RadioFilters";
-
+import { GenreFilter } from "./types";
 const FiltersDiv = styled.div`
   display: flex;
   padding: 10px 50px;
@@ -22,22 +22,19 @@ const DividerLine = styled.hr`
 `;
 
 interface MovieFiltersProps {
-  onUpdateGenreFilter: (activeFilters: object) => void;
-  onUpdateWatchedFilter: (activeFilters: object) => void;
+  onUpdateGenreFilter: (activeFilters: GenreFilter) => void;
+  onUpdateWatchedFilter: (activeFilters: string) => void;
 }
 
 const MovieFilters: React.FC<MovieFiltersProps> = ({
   onUpdateGenreFilter,
   onUpdateWatchedFilter,
 }) => {
-  const [activeGenreFilters, setActiveGenreFilters] = useState<object>({});
-
-  const updateGenreFilter = (newActiveFilters: object) => {
-    setActiveGenreFilters(newActiveFilters);
+  const updateGenreFilter = (newActiveFilters: GenreFilter) => {
     onUpdateGenreFilter(newActiveFilters);
   };
 
-  const updateWatchedFilter = (newActiveFilters: object) => {
+  const updateWatchedFilter = (newActiveFilters: string) => {
     onUpdateWatchedFilter(newActiveFilters);
   };
 
@@ -46,7 +43,6 @@ const MovieFilters: React.FC<MovieFiltersProps> = ({
       <div>
         <Title>Genres</Title>
         <FiltersGroup
-          activeFilters={activeGenreFilters}
           onUpdateFilter={updateGenreFilter}
           filters={[
             "Action",

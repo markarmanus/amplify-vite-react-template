@@ -45,7 +45,7 @@ const ConfirmSignUp = () => {
   return (
     <div style={{ height: "100%" }}>
       <NavBar
-        username={null}
+        username={undefined}
         showMyListIcon={false}
         showSearchBar={false}
         showLoginButton={true}

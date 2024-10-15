@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import OnImagesLoaded from "react-on-images-loaded";
 import API from "../APIs/API";
-import Helper from "../Helper";
+import Helper from "../APIs/Helper";
 import LoadingSpinner from "../UI/LoadingSpinner";
 import ExpandingDivider from "../UI/ExpandingDivider";
 import BlurDiv from "../UI/BlurDiv";
@@ -11,7 +11,6 @@ import MovieModal from "../UI/MovieModal";
 import { message } from "antd";
 import debounce from "lodash/debounce";
 import { useNavigate } from "react-router";
-import Logger from "../modules/Logger";
 
 const Home = () => {
   const [user, setUser] = useState(API.getUser());
@@ -42,12 +41,9 @@ const Home = () => {
 
   const showModalHandler = async (movieId) => {
     const movieDetails = await API.movieDetails(movieId);
-    const transformedMovie = Helper.movieTransformer(
-      movieDetails.data,
-      movieId
-    );
+    const strigifiedMovie = Helper.stringifyMovie(movieDetails.data, movieId);
     setShowModal(true);
-    setModalData(transformedMovie);
+    setModalData(strigifiedMovie);
   };
 
   const updateList = async () => {
@@ -75,7 +71,6 @@ const Home = () => {
       const isLoggedIn = await API.isLoggedIn();
       if (isLoggedIn) {
         const storedUser = await API.getUser();
-        Logger.log(storedUser);
         setUser(storedUser);
         await updateList();
         await getRecommendations();

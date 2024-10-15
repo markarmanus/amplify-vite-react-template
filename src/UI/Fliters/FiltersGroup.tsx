@@ -2,7 +2,7 @@
 import React from "react";
 import { Checkbox } from "antd";
 import styled from "styled-components";
-
+import { GenreFilter } from "./types";
 const StyledCheckBox = styled(Checkbox)`
   color: white;
   margin: 5px;
@@ -19,7 +19,7 @@ const FiltersGroupDiv = styled.div`
 
 interface FiltersGroupProps {
   filters: string[];
-  onUpdateFilter: (activeFilters: object) => void;
+  onUpdateFilter: (activeFilters: GenreFilter) => void;
 }
 
 const FiltersGroup: React.FC<FiltersGroupProps> = ({

@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import NavBar from "../UI/NavBar";
 import SignUpModal from "../UI/SignUpModal";
 import BlurDiv from "../UI/BlurDiv";
 import API from "../APIs/API";
 import { useNavigate } from "react-router";
+import NavBar from "../UI/NavBar";
 
 const StyledImage = styled.img`
   width: 100%;
@@ -29,7 +29,6 @@ const SignUp: React.FC = () => {
   return (
     <div style={{ height: "100%" }}>
       <NavBar
-        username={null}
         showMyListIcon={false}
         showSearchBar={false}
         showLoginButton={true}
@@ -39,7 +38,7 @@ const SignUp: React.FC = () => {
       <BlurDiv style={{ height: "100%" }} blurDegree={"3px"}>
         <StyledImage src={backgroundImage} alt="oops" />
       </BlurDiv>
-      <SignUpModal navigate={navigate} />
+      <SignUpModal />
     </div>
   );
 };

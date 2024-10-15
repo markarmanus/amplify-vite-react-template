@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import UserIcon from "./UserIcon";
-import MyListIcon from "./MyListIcon";
 import AppButton from "./Button";
 import SearchBar from "./SearchBar";
+import MyListIcon from "./MyListIcon";
 
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import API from "../APIs/API";
@@ -71,7 +71,7 @@ const NavBar: React.FC<NavBarProps> = (props) => {
   const myListIcon = props.showMyListIcon ? (
     <Link to="/my-list">
       <MyListIconDiv>
-        <MyListIcon myListNo={props.listCount} />
+        <MyListIcon myListNo={props.listCount || 0} />
       </MyListIconDiv>
     </Link>
   ) : null;

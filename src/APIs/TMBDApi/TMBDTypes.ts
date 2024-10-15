@@ -36,7 +36,7 @@ export type SearchResult = {
   backdrop_path: string;
   id: number;
   original_title: string;
-  release_date: Date;
+  release_date: string;
   poster_path: string;
   popularity: number;
   title: string;
@@ -44,7 +44,35 @@ export type SearchResult = {
   vote_count: number;
 };
 
-export type Movie = {
+export type VideoData = {
+  d: string;
+  iso_639_1: string;
+  iso_3166_1: string;
+  key: string;
+  name: string;
+  official: boolean;
+  published_at: string;
+  site: string;
+  size: number;
+  type: string;
+};
+
+export type PersonInfo = {
+  adult: false;
+  credit_id: string;
+  department: string;
+  gender: number;
+  id: number;
+  job: string;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path?: null | "string";
+};
+
+// When requesting Details of a single Movie
+export type DetailedMovie = {
   adult: boolean;
   backdrop_path: string;
   belongs_to_collection: object;
@@ -59,7 +87,9 @@ export type Movie = {
   poster_path: string;
   production_companies: ProductionCompany[];
   production_countries: ProductionCountry[];
-  release_date: Date;
+  release_date: string;
+  videos: { results: VideoData[] };
+  credits: { cast: PersonInfo[]; crew: PersonInfo[] };
   revenue: number;
   runtime: number;
   spoken_languages: SpokenLanguage[];
@@ -69,6 +99,55 @@ export type Movie = {
   vote_average: number;
   vote_count: number;
 };
+
+// When requesting Multiple Movies
+export type Movie = {
+  adult: boolean;
+  backdrop_path: string;
+  genre_ids: number[];
+  id: number;
+  original_language: string;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+};
+
+// Properties of a Movie we care about
+export type FilteredMovie = Pick<
+  Movie,
+  "id" | "title" | "overview" | "poster_path" | "genre_ids" | "vote_average"
+>;
+
+// Properties of a single Movie Request we care about.
+export type FilteredDetailedMovie = Pick<
+  DetailedMovie,
+  | "id"
+  | "title"
+  | "overview"
+  | "poster_path"
+  | "genres"
+  | "vote_average"
+  | "videos"
+  | "credits"
+  | "release_date"
+  | "runtime"
+>;
+
+export type ExtendedFilteredMovie = FilteredMovie & {
+  isAdded: boolean;
+  watched: boolean;
+  genres: Genre[];
+  runtime?: number;
+  release_date?: Date;
+  videos?: { results: VideoData[] };
+  credits?: { cast: PersonInfo[]; crew: PersonInfo[] };
+};
+``;
 
 export type Genre = {
   id: number;

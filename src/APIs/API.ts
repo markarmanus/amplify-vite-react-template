@@ -16,6 +16,11 @@ import {
   getCurrentUser,
   confirmSignUp,
 } from "aws-amplify/auth";
+import {
+  DetailedMovie,
+  ExtendedFilteredMovie,
+  FilteredMovie,
+} from "./TMBDApi/TMBDTypes";
 
 type SuccessCallBackFn = (response: any) => void;
 type ErrorCallBackFn = (error?: any) => void;
@@ -29,17 +34,30 @@ const client: V6Client<Schema> = generateClient<Schema>();
 class API {
   private static cognitoUserId: string;
   private static user: Schema["User"]["type"] | null;
+  private static movieGenres;
   private static async getUserId() {
     if (this.cognitoUserId) return this.cognitoUserId;
     const { userId } = await getCurrentUser();
     this.cognitoUserId = userId;
     return userId;
   }
-  private static async createUserEntity(email: string, cognitoUserId: string) {
+
+  private static async getMovieGenres() {
+    if (this.movieGenres) return this.movieGenres;
+    const movieGenres = await TMDBApi.getGenres();
+    this.movieGenres = movieGenres;
+    return movieGenres;
+  }
+  private static async createUserEntity(
+    email: string,
+    username: string,
+    cognitoUserId: string
+  ) {
     const { errors } = await client.models.User.create(
       {
         email: email,
         userId: cognitoUserId,
+        username,
         movies: [],
         watched: [],
       },
@@ -139,11 +157,11 @@ class API {
   }
 
   static async login(
-    data: Omit<UserBasicData, "username">,
+    data: UserBasicData,
     onSuccess: SuccessCallBackFn,
     onFail: ErrorCallBackFn
   ) {
-    const { email, password } = data;
+    const { email, password, username } = data;
 
     await signIn({
       username: email,
@@ -156,7 +174,7 @@ class API {
           const userId = await this.getUserId();
           const userEntity = await this.getUserEntity(userId);
           if (!userEntity) {
-            await this.createUserEntity(email, userId);
+            await this.createUserEntity(email, username, userId);
           }
           onSuccess({ data });
         }
@@ -174,7 +192,7 @@ class API {
     onFail: ErrorCallBackFn
   ) {
     const email = "markarmanus@gmail.com";
-    const password = "markAndrew1234";
+    const password = "DemoAccount1234";
 
     await this.login({ email, password }, onSuccess, onFail);
     const userId = await this.getUserId();
@@ -202,9 +220,20 @@ class API {
       const movieExists = await this.getMoviesEntities([stringMovieId]);
       if (!movieExists[0]) {
         const tmbdMovie = await TMDBApi.movieDetails(movieId);
-        const formatedMovie = Helper.formatMovie(tmbdMovie);
-        formatedMovie.genres = JSON.stringify(formatedMovie.genres);
-        await this.createMovieEntity(formatedMovie);
+        tmbdMovie.genre_ids = tmbdMovie.genres.map((genre) => genre.id);
+        const movieExtraInfoFilter = {
+          id: true,
+          title: true,
+          overview: true,
+          poster_path: true,
+          genre_ids: true,
+          vote_average: true,
+        };
+        const filteredMovie = Helper.filterObj(
+          tmbdMovie,
+          movieExtraInfoFilter
+        ) as FilteredMovie;
+        await this.createMovieEntity(filteredMovie);
       }
       await this.updateUserEntity(userId, { movies });
       onSuccess();
@@ -214,23 +243,24 @@ class API {
     }
   }
 
-  static async movieDetails(movieId: number) {
+  static async movieDetails(movieId: number): { data: DetailedMovie } {
     const movie = await TMDBApi.movieDetails(movieId, ["videos", "credits"]);
-    const formatedResponse = Helper.formatMovie(movie);
-    return { data: formatedResponse };
+    return { data: movie };
   }
 
-  static async search(searchValue: string, page = 1) {
+  static async search(
+    searchValue: string,
+    page = 1
+  ): { data: ExtendedFilteredMovie[] } {
     const respone = await TMDBApi.searchMovies(searchValue, { page });
     const userId = await this.getUserId();
     const user = await this.getUserEntity(userId);
-    const formatedResponse = Helper.formatMovies(respone);
-    const injectedFormatedResponse = Helper.mergeMoviesWithUserHistory(
-      user?.movies,
-      user?.watched,
-      formatedResponse
-    );
-    return { data: injectedFormatedResponse };
+    const movieGenres = await this.getMovieGenres();
+    if (respone) {
+      const movies = Helper.formatMovies(respone, movieGenres, user);
+      return { data: movies };
+    }
+    return { data: [] };
   }
 
   static async removeMovieFromMyList(
@@ -282,38 +312,28 @@ class API {
     }
   }
 
-  static async getRecommendations(page: number) {
-    Logger.log(page, "getRecommendations");
+  static async getRecommendations(page: number): {
+    data: ExtendedFilteredMovie[];
+  } {
     const { movies } = await TMDBApi.discoverForRecommendations([], [], page);
     const userId = await this.getUserId();
     const user = await this.getUserEntity(userId);
-    const formatedResponse = Helper.formatMovies(movies);
-    const injectedFormatedMoveies = Helper.mergeMoviesWithUserHistory(
-      user?.movies,
-      user?.watched,
-      formatedResponse
-    );
-    Logger.log(injectedFormatedMoveies, "getRecommendations");
-
-    return { data: injectedFormatedMoveies };
+    const movieGenres = await this.getMovieGenres();
+    const formatedMovies = Helper.formatMovies(movies, movieGenres, user);
+    return { data: formatedMovies };
   }
 
-  static async getMyList() {
+  static async getMyList(): { data: ExtendedFilteredMovie[] } {
     const userId = await this.getUserId();
     const user = await this.getUserEntity(userId);
-    if (user?.movies) {
+    if (user?.movies?.length) {
       const movies = await this.getMoviesEntities(user.movies as string[]);
-      const formatedResponse = Helper.formatMovies(movies);
-      const injectedFormatedMoveies = Helper.mergeMoviesWithUserHistory(
-        user?.movies,
-        user?.watched,
-        formatedResponse
-      );
-      Logger.log(injectedFormatedMoveies, "getMyList");
-      return { data: injectedFormatedMoveies };
-    }
+      const movieGenres = await this.getMovieGenres();
 
-    return [];
+      const formatedMovies = Helper.formatMovies(movies, movieGenres, user);
+      return { data: formatedMovies };
+    }
+    return { data: [] };
   }
   static async getUser() {
     const userId = await this.getUserId();

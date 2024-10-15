@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AppButton from "./Button";
 import GenericInput from "./Input";
-import Modal from "./Modal";
-import ValidationNotice from "./ValidityNotice";
 import { UserOutlined, KeyOutlined } from "@ant-design/icons";
 import { message } from "antd";
+import ValidationNotice from "./ValidityNotice";
 import API from "../APIs/API";
+import Modal from "./Modal";
 
 const iconStyling = {
   color: "#c1c1c1",

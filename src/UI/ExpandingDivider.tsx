@@ -3,16 +3,16 @@ import { DownOutlined } from "@ant-design/icons";
 import React, { ReactNode, useState, useRef } from "react";
 
 const DividerDiv = styled.div<{
-  color: string;
+  color?: string;
   fontSize: number;
-  openable: boolean;
+  $openable: boolean;
 }>`
   display: flex;
   padding: 10px;
   align-items: center;
   color: ${(props) => props.color};
   font-size: ${(props) => props.fontSize}px;
-  cursor: ${(props) => (props.openable ? "pointer" : "auto")};
+  cursor: ${(props) => (props.$openable ? "pointer" : "auto")};
 `;
 
 const TitleDiv = styled.div<{ color: string }>`
@@ -27,7 +27,7 @@ const DividerLine = styled.hr<{ color: string }>`
 `;
 
 const ArrowIcon = styled(DownOutlined)<{
-  showing: boolean;
+  $showing: boolean;
   fontSize: number;
   color: string;
 }>`
@@ -35,7 +35,7 @@ const ArrowIcon = styled(DownOutlined)<{
   font-size: calc(${(props) => props.fontSize}px * (2 / 3));
   color: ${(props) => props.color};
   transition: all 0.5s ease;
-  transform: ${(props) => (!props.showing ? "rotate(-90deg)" : "rotate(0)")};
+  transform: ${(props) => (!props.$showing ? "rotate(-90deg)" : "rotate(0)")};
 `;
 
 const ExpandingDiv = styled.div<{ $show: boolean; height?: number }>`
@@ -48,7 +48,7 @@ const ExpandingDiv = styled.div<{ $show: boolean; height?: number }>`
 `;
 
 interface ExpandingDividerProps {
-  color: string;
+  color?: string;
   titleColor: string;
   lineColor: string;
   fontSize: number;
@@ -82,7 +82,7 @@ const ExpandingDivider: React.FC<ExpandingDividerProps> = ({
       <DividerDiv
         color={color}
         fontSize={fontSize}
-        openable={openable}
+        $openable={openable}
         onClick={() => {
           if (openable) toggleShowContent();
         }}
@@ -90,7 +90,7 @@ const ExpandingDivider: React.FC<ExpandingDividerProps> = ({
         <TitleDiv color={titleColor}>{title}</TitleDiv>
         {openable && (
           <ArrowIcon
-            showing={showContent}
+            $showing={showContent}
             fontSize={fontSize}
             color={titleColor}
           />

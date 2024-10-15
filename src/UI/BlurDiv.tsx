@@ -3,13 +3,13 @@ import styled from "styled-components";
 
 interface BlurDivProps {
   style?: React.CSSProperties;
-  blurDegree: string;
+  blurDegree: number;
   isBlur?: boolean;
   children: React.ReactNode;
 }
 
 const StyledBlurDiv = styled.div<{
-  $blurDegree: string;
+  $blurDegree: number;
   $isBlur?: boolean;
 }>`
   filter: blur(${(props) => props.$blurDegree}px);

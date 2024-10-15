@@ -20,7 +20,7 @@ const FiltersGroupDiv = styled.div`
 interface RadioFiltersProps {
   defaultValue: string;
   filters: string[];
-  onUpdateFilter: (activeFilters: object) => void;
+  onUpdateFilter: (activeFilters: string) => void;
 }
 
 const RadioFilters: React.FC<RadioFiltersProps> = ({

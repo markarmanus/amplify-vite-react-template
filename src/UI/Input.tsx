@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 
@@ -37,55 +37,47 @@ interface GenericInputProps {
   inputValue: string;
 }
 
-interface GenericInputState {
-  showPassword: boolean;
-}
+const GenericInput: React.FC<GenericInputProps> = ({
+  icon,
+  placeholderValue,
+  inputType,
+  onInputChange,
+  onInputBlur,
+  inputValue,
+}) => {
+  const [showPassword, setShowPassword] = useState(false);
 
-class GenericInput extends Component<GenericInputProps, GenericInputState> {
-  state: GenericInputState = {
-    showPassword: false,
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
-  toggleShowPassword = () => {
-    this.setState((prevState) => ({
-      showPassword: !prevState.showPassword,
-    }));
-  };
-
-  getInputPasswordIcon = () => {
-    if (this.props.inputType === "password") {
-      return this.state.showPassword ? (
-        <EyeOutlined
-          style={passwordIconStyling}
-          onClick={this.toggleShowPassword}
-        />
+  const getInputPasswordIcon = () => {
+    if (inputType === "password") {
+      return showPassword ? (
+        <EyeOutlined style={passwordIconStyling} onClick={toggleShowPassword} />
       ) : (
         <EyeInvisibleOutlined
           style={passwordIconStyling}
-          onClick={this.toggleShowPassword}
+          onClick={toggleShowPassword}
         />
       );
     }
     return null;
   };
 
-  render() {
-    return (
-      <OuterDiv>
-        <div style={{ marginRight: "3px", display: "flex" }}>
-          {this.props.icon}
-        </div>
-        <StyledInput
-          placeholder={this.props.placeholderValue}
-          type={this.state.showPassword ? "text" : this.props.inputType}
-          onChange={this.props.onInputChange}
-          onBlur={this.props.onInputBlur}
-          value={this.props.inputValue}
-        />
-        <div>{this.getInputPasswordIcon()}</div>
-      </OuterDiv>
-    );
-  }
-}
+  return (
+    <OuterDiv>
+      <div style={{ marginRight: "3px", display: "flex" }}>{icon}</div>
+      <StyledInput
+        placeholder={placeholderValue}
+        type={showPassword ? "text" : inputType}
+        onChange={onInputChange}
+        onBlur={onInputBlur}
+        value={inputValue}
+      />
+      <div>{getInputPasswordIcon()}</div>
+    </OuterDiv>
+  );
+};
 
 export default GenericInput;

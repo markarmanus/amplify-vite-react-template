@@ -4,7 +4,7 @@ import { HeartFilled } from "@ant-design/icons";
 
 interface MyListIconProps {
   myListNo: number;
-  onIconClick: () => void;
+  onIconClick?: () => void;
 }
 
 const heartIconStyling = {

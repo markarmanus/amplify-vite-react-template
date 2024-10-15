@@ -91,9 +91,9 @@ const SignUpModal: React.FC = () => {
   };
 
   const passwordValidate = () => {
-    setPasswordLen(!passwordLength.validate(passwordInput));
-    setPasswordLetter(!passwordLetters.validate(passwordInput));
-    setPasswordNumber(!passwordNumbers.validate(passwordInput));
+    setPasswordLen(passwordLength.validate(passwordInput) as boolean);
+    setPasswordLetter(passwordLetters.validate(passwordInput) as boolean);
+    setPasswordNumber(passwordNumbers.validate(passwordInput) as boolean);
     checkSignupValidity();
   };
 
